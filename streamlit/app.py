@@ -56,3 +56,43 @@ st.write(data[selectedDataframe].dtypes)
 # display df shape
 st.write('Dataset shape')
 st.write(data[selectedDataframe].shape)
+
+# display df stats
+st.write('Dataset stats')
+st.write(data[selectedDataframe].describe())
+
+# heat map
+st.write('Heatmap')
+fig, ax = plt.subplots()
+sns.heatmap(data[selectedDataframe].corr(), ax=ax, annot=True)
+st.pyplot(fig)
+
+# bar
+st.write('Bar')
+fig, ax = plt.subplots()
+sns.countplot(data=data[selectedDataframe], ax=ax)
+st.pyplot(fig)
+
+# Custom visualisation
+st.write('Custom visualisation')
+
+graphs = ['heatmap', 'bar']
+
+selectedGraph = st.selectbox(
+    "Choose graph", graphs)
+
+if selectedGraph == 'bar':
+    dfColumns = data[selectedDataframe].select_dtypes(
+        include=['float64', 'int64']).columns.tolist()
+    selectedCols = st.multiselect(
+        "Choose graph", dfColumns)
+
+
+fig, ax = plt.subplots()
+if selectedGraph == 'heatmap':
+    sns.heatmap(data[selectedDataframe].corr(), ax=ax, annot=True)
+
+elif selectedGraph == 'bar' and len(selectedCols):
+    sns.distplot(data[selectedDataframe][selectedCols[0]], ax=ax)
+
+st.pyplot(fig)
