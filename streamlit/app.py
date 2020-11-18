@@ -11,7 +11,6 @@ st.header("Simple Header")
 
 
 userInput = st.text_input('Path to your data folder', './data/')
-st.write(userInput)
 
 if userInput:
     if st.button("Load data"):
