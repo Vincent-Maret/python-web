@@ -1,25 +1,31 @@
 import os
 import pandas as pd
+import streamlit as st
+import time
 
 
 def getCsvPaths(path):
     assert os.path.exists(
-        path), "Directory not found: "+str(path)
+        path), "File or directory not found: "+str(path)
 
-    csvPaths = []
-    for (root, dirNames, fileNames) in os.walk(path):
-        for fileName in fileNames:
-            if fileName.endswith('.csv'):
-                csvPaths.append(os.path.join(root, fileName))
-        break
+    if os.path.isfile(path) and path.endswith('.csv'):
+        return [path]
 
-    return csvPaths
+    else:
+        csvPaths = []
+        for (root, dirNames, fileNames) in os.walk(path):
+            for fileName in fileNames:
+                if fileName.endswith('.csv'):
+                    csvPaths.append(os.path.join(root, fileName))
+            break
+
+        return csvPaths
 
 
-def loadCsvDataFrames(paths):
-    assert len(paths) > 0, 'No CSV file found in givent directory.'
+@st.cache
+def loadCsvDataFrames(paths, data):
+    assert len(paths) > 0, 'No CSV file found in given directory.'
 
-    data = []
     for path in paths:
         data.append(pd.read_csv(path))
     return data
