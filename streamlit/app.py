@@ -81,12 +81,12 @@ st.pyplot(fig)
 # Custom visualisation
 st.title('Custom visualisation')
 
-graphs = ['heatmap', 'bar']
+graphs = ['heatmap', 'bar', 'box']
 
 selectedGraph = st.selectbox(
     "Choose graph", graphs)
 
-if selectedGraph == 'bar':
+if selectedGraph in ['bar', 'box']:
     dfColumns = data[selectedDataframe].select_dtypes(
         include=['float64', 'int64']).columns.tolist()
     selectedCols = st.multiselect(
@@ -103,6 +103,10 @@ if selectedGraph == 'heatmap':
 
 elif selectedGraph == 'bar' and len(selectedCols):
     sns.distplot(data[selectedDataframe][selectedCols[0]], ax=ax)
+    shouldDisplayFig = True
+
+elif selectedGraph == 'box' and len(selectedCols):
+    plt.boxplot(data[selectedDataframe][selectedCols[0]])
     shouldDisplayFig = True
 
 if shouldDisplayFig:
