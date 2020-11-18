@@ -11,6 +11,11 @@ data = []
 datasetNames = ['Chess', 'UFO']
 pathToFiles = ['./data/chess.csv', './data/ufo.csv']
 
+
+def formatDfSelectNames(opt):
+    return datasetNames[opt]
+
+
 st.title("TP Vincent Maret Streamlit")
 
 # Load datasets section
@@ -27,13 +32,17 @@ st.title("TP Vincent Maret Streamlit")
 #         data = res[0]
 #         # datasetNames = res[1]
 
+# Load data
 data = ld.loadCsvDataFrames(pathToFiles, data, datasetNames)[0]
 
 # Select dataset
-selectedDataframe = st.selectbox("Choose dataset", datasetNames)
+selectedDataframe = st.selectbox(
+    "Choose dataset", [0, 1], format_func=formatDfSelectNames)
 
 # Show dataset section
 if len(data):
     dfRowsToDisplay = st.number_input(
         label='Number of rows from selected dataset to display', min_value=5)
-    st.dataframe(data[0].head(dfRowsToDisplay))
+    st.dataframe(data[selectedDataframe].head(dfRowsToDisplay))
+
+st.write(data[selectedDataframe].columns)
