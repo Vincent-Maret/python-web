@@ -63,7 +63,7 @@ st.title('Dataset shape')
 st.write(data[selectedDataframe].shape)
 
 # display df stats
-st.write('Dataset stats')
+st.title('Dataset stats')
 st.write(data[selectedDataframe].describe())
 
 # heat map
@@ -91,10 +91,7 @@ selectedGraph = st.selectbox(
 
 
 if selectedGraph in ['bar', 'box', 'lineplot']:
-    if selectedGraph in ['bar', 'lineplot', 'box']:
-        dfColumns = numericDataOnly.columns.tolist()
-    else:
-        dfColumns = data[selectedDataframe].columns.tolist()
+    dfColumns = numericDataOnly.columns.tolist()
 
     if selectedGraph in ['bar', 'box']:
         selectedCols = st.selectbox(
