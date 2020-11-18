@@ -37,12 +37,22 @@ data = ld.loadCsvDataFrames(pathToFiles, data, datasetNames)[0]
 
 # Select dataset
 selectedDataframe = st.selectbox(
-    "Choose dataset", [0, 1], format_func=formatDfSelectNames)
+    "Choose dataset", range(len(datasetNames)), format_func=formatDfSelectNames)
 
 # Show dataset section
 if len(data):
     dfRowsToDisplay = st.number_input(
         label='Number of rows from selected dataset to display', min_value=5)
-    st.dataframe(data[selectedDataframe].head(dfRowsToDisplay))
+    st.write(data[selectedDataframe].head(dfRowsToDisplay))
 
+# display df columns
+st.write('Dataset columns')
 st.write(data[selectedDataframe].columns)
+
+# display df types
+st.write('Column types')
+st.write(data[selectedDataframe].dtypes)
+
+# display df shape
+st.write('Dataset shape')
+st.write(data[selectedDataframe].shape)
