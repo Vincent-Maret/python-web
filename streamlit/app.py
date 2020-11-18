@@ -78,19 +78,31 @@ fig, ax = plt.subplots()
 sns.countplot(data=data[selectedDataframe], ax=ax)
 st.pyplot(fig)
 
+
 # Custom visualisation
 st.title('Custom visualisation')
 
 graphs = ['heatmap', 'bar', 'box', 'lineplot']
+numericDataOnly = data[selectedDataframe].select_dtypes(
+    include=['float64', 'int64'])
 
 selectedGraph = st.selectbox(
     "Choose graph", graphs)
 
+
 if selectedGraph in ['bar', 'box', 'lineplot']:
-    dfColumns = data[selectedDataframe].select_dtypes(
-        include=['float64', 'int64']).columns.tolist()
-    selectedCols = st.multiselect(
-        "Choose graph", dfColumns)
+    if selectedGraph in ['bar', 'lineplot', 'box']:
+        dfColumns = numericDataOnly.columns.tolist()
+    else:
+        dfColumns = data[selectedDataframe].columns.tolist()
+
+    if selectedGraph in ['bar', 'box']:
+        selectedCols = st.selectbox(
+            "Choose a field", dfColumns)
+    else:
+        selectedCols = st.multiselect(
+            "Choose some fields", dfColumns)
+
 
 shouldDisplayFig = False
 
@@ -101,15 +113,15 @@ if selectedGraph == 'heatmap':
         sns.heatmap(filteredData, ax=ax, annot=True)
         shouldDisplayFig = True
 
-elif selectedGraph == 'bar' and len(selectedCols):
-    sns.distplot(data[selectedDataframe][selectedCols[0]], ax=ax)
+elif selectedGraph == 'bar' and selectedCols:
+    sns.distplot(data[selectedDataframe][selectedCols], ax=ax)
     shouldDisplayFig = True
 
-elif selectedGraph == 'box' and len(selectedCols):
-    plt.boxplot(data[selectedDataframe][selectedCols[0]])
+elif selectedGraph == 'box' and selectedCols:
+    plt.boxplot(data[selectedDataframe][selectedCols])
     shouldDisplayFig = True
 
-elif selectedGraph == 'lineplot' and len(selectedCols) >= 2:
+elif selectedGraph == 'lineplot' and len(selectedCols) == 2:
     sns.lineplot(x=selectedCols[0], y=selectedCols[1],
                  data=data[selectedDataframe], ax=ax)
     shouldDisplayFig = True
