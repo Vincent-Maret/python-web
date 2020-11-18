@@ -3,6 +3,10 @@ import pandas as pd
 import streamlit as st
 import time
 
+################################
+# No use anymore, I need a state manager in order to keep data after page refresh
+################################
+
 
 def getCsvPaths(path):
     assert os.path.exists(

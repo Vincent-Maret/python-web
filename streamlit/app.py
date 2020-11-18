@@ -5,77 +5,54 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-import loadData as ld
+dataDirPath = './data'
 
 
-data = []
-dataDirectory = './data'
-pathToFiles = []
-fileNames = os.listdir(dataDirectory)
-
-for fileName in fileNames:
-    pathToFiles.append(os.path.join(dataDirectory, fileName))
+def loadDataset(datasetPath):
+    return pd.read_csv(datasetPath)
 
 
-def formatDfSelectNames(index):
-    return fileNames[index]
+def getDataset(dirPath):
+    fileNames = os.listdir(dirPath)
+    selectedFile = st.selectbox("Choose dataset", fileNames)
+    datasetPath = os.path.join(dirPath, selectedFile)
+    return loadDataset(datasetPath)
 
 
 st.title("TP Vincent Maret Streamlit")
 
-# We need a state manager in order to ask user to write an input without page refresh
+data = getDataset(dataDirPath)
 
-# try to implement a state !!!!!!!
-# pathToFiles = st.text_input(
-#     'Path to your data directory or csv file', './data/')
-
-# if pathToFiles:
-#     if st.button("Load data"):
-#         # try to implement a state
-#         # csvPaths = ld.getCsvPaths(pathToFiles)
-#         res = ld.loadCsvDataFrames(pathToFiles, data, datasetNames)
-#         data = res[0]
-#         # datasetNames = res[1]
-
-# Load data
-data = ld.loadCsvDataFrames(pathToFiles, data)
-
-# Select dataset
-selectedDataframe = st.selectbox(
-    "Choose dataset", range(len(fileNames)), format_func=formatDfSelectNames)
-
-# Show dataset section
-if len(data):
-    dfRowsToDisplay = st.number_input(
-        label='Number of rows from selected dataset to display', min_value=5)
-    st.write(data[selectedDataframe].head(dfRowsToDisplay))
+dfRowsToDisplay = st.number_input(
+    label='Number of rows from selected dataset to display', min_value=5)
+st.write(data.head(dfRowsToDisplay))
 
 # display df columns
 st.title('Dataset columns')
-st.write(data[selectedDataframe].columns)
+st.write(data.columns)
 
 # display df types
 st.title('Column types')
-st.write(data[selectedDataframe].dtypes)
+st.write(data.dtypes)
 
 # display df shape
 st.title('Dataset shape')
-st.write(data[selectedDataframe].shape)
+st.write(data.shape)
 
 # display df stats
 st.title('Dataset stats')
-st.write(data[selectedDataframe].describe())
+st.write(data.describe())
 
 # heat map
 st.title('Heatmap')
 fig, ax = plt.subplots()
-sns.heatmap(data[selectedDataframe].corr(), ax=ax, annot=True)
+sns.heatmap(data.corr(), ax=ax, annot=True)
 st.pyplot(fig)
 
 # bar
 st.title('Bar')
-fig, ax = plt.subplots()
-sns.countplot(data=data[selectedDataframe], ax=ax)
+fig, ax = plt.subplots(figsize=(15, 3))
+sns.countplot(data=data, ax=ax)
 st.pyplot(fig)
 
 
@@ -83,7 +60,7 @@ st.pyplot(fig)
 st.title('Custom visualisation')
 
 graphs = ['heatmap', 'bar', 'box', 'lineplot']
-numericDataOnly = data[selectedDataframe].select_dtypes(
+numericDataOnly = data.select_dtypes(
     include=['float64', 'int64'])
 
 selectedGraph = st.selectbox(
@@ -105,22 +82,22 @@ shouldDisplayFig = False
 
 fig, ax = plt.subplots()
 if selectedGraph == 'heatmap':
-    filteredData = data[selectedDataframe].corr()
+    filteredData = data.corr()
     if len(filteredData):
         sns.heatmap(filteredData, ax=ax, annot=True)
         shouldDisplayFig = True
 
 elif selectedGraph == 'bar' and selectedCols:
-    sns.distplot(data[selectedDataframe][selectedCols], ax=ax)
+    sns.distplot(data[selectedCols], ax=ax)
     shouldDisplayFig = True
 
 elif selectedGraph == 'box' and selectedCols:
-    plt.boxplot(data[selectedDataframe][selectedCols])
+    plt.boxplot(data[selectedCols])
     shouldDisplayFig = True
 
 elif selectedGraph == 'lineplot' and len(selectedCols) == 2:
     sns.lineplot(x=selectedCols[0], y=selectedCols[1],
-                 data=data[selectedDataframe], ax=ax)
+                 data=data, ax=ax)
     shouldDisplayFig = True
 
 if shouldDisplayFig:
