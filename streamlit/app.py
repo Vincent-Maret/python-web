@@ -6,16 +6,34 @@ import seaborn as sns
 
 import loadData as ld
 
+
 data = []
+datasetNames = ['Chess', 'UFO']
+pathToFiles = ['./data/chess.csv', './data/ufo.csv']
 
 st.title("TP Vincent Maret Streamlit")
-st.header("Simple Header")
 
+# Load datasets section
 
-userInput = st.text_input('Path to your data directory or csv file', './data/')
+# try to implement a state !!!!!!!
+# pathToFiles = st.text_input(
+#     'Path to your data directory or csv file', './data/')
 
-if userInput:
-    if st.button("Load data"):
-        csvPaths = ld.getCsvPaths(userInput)
-        data = ld.loadCsvDataFrames(csvPaths, data)
-        st.dataframe(data[0].head())
+# if pathToFiles:
+#     if st.button("Load data"):
+#         # try to implement a state
+#         # csvPaths = ld.getCsvPaths(pathToFiles)
+#         res = ld.loadCsvDataFrames(pathToFiles, data, datasetNames)
+#         data = res[0]
+#         # datasetNames = res[1]
+
+data = ld.loadCsvDataFrames(pathToFiles, data, datasetNames)[0]
+
+# Select dataset
+selectedDataframe = st.selectbox("Choose dataset", datasetNames)
+
+# Show dataset section
+if len(data):
+    dfRowsToDisplay = st.number_input(
+        label='Number of rows from selected dataset to display', min_value=5)
+    st.dataframe(data[0].head(dfRowsToDisplay))

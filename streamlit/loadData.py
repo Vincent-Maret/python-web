@@ -23,9 +23,10 @@ def getCsvPaths(path):
 
 
 @st.cache
-def loadCsvDataFrames(paths, data):
+def loadCsvDataFrames(paths, data, datasetNames):
     assert len(paths) > 0, 'No CSV file found in given directory.'
 
     for path in paths:
         data.append(pd.read_csv(path))
-    return data
+        datasetNames.append(path)
+    return [data, datasetNames]
