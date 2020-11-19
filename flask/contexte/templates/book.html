@@ -1,0 +1,26 @@
+<!doctype html>
+<title> {{ book.title }} </title>
+
+<h1>{{ book.title }}</h1>
+
+<img src='{{book.thumbnailUrl}}'></img>
+
+<h3>categories</h3>
+<div>
+  {% for category in book.categories %}
+  {{ category }}
+  {% endfor %}
+</div>
+
+<h3>Authors</h3>
+<div>
+  {% for author in book.authors %}
+  {{ author }}
+  {% endfor %}
+</div>
+
+<h3>Description</h3>
+<p> {{ book.shortDescription }} </p>
+
+<h3>Page count</h3>
+<p> {{ book.pageCount }} </p>

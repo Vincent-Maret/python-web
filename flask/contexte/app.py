@@ -29,7 +29,7 @@ def getBook(id):
     searchedBook = next(
         (book for book in booksList if book["isbn"] == id), False)
     if searchedBook:
-        return jsonify(searchedBook)
+        return render_template('book.html', book=searchedBook)
     else:
         return 'Book not found', 404
 
@@ -39,7 +39,7 @@ def getBookByTitle(title):
     searchedBook = next(
         (book for book in booksList if book["title"] == title), False)
     if searchedBook:
-        return jsonify(searchedBook)
+        return render_template('book.html', book=searchedBook)
     else:
         return 'Book not found', 404
 
