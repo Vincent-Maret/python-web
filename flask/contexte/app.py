@@ -1,16 +1,17 @@
 from flask import Flask, render_template, jsonify
+import json
+
 app = Flask(__name__)
 
-booksList = [
-    {
-        'id': 1,
-        'titre': 'un titre',
-    },
-    {
-        'id': 2,
-        'titre': 'un autre titre random',
-    }
-]
+
+def loadJson(path):
+    f = open(path)
+    loadedJson = json.load(f)
+    f.close()
+    return loadedJson
+
+
+booksList = loadJson('data/books.json')
 
 
 @app.route("/")
@@ -26,17 +27,17 @@ def books():
 @app.route('/books/<id>')
 def getBook(id):
     searchedBook = next(
-        (book for book in booksList if book["id"] == int(id)), False)
+        (book for book in booksList if book["isbn"] == id), False)
     if searchedBook:
         return jsonify(searchedBook)
     else:
         return 'Book not found', 404
 
 
-@app.route('/books/name/<name>')
-def getBookByName(name):
+@app.route('/books/title/<title>')
+def getBookByTitle(title):
     searchedBook = next(
-        (book for book in booksList if book["titre"] == name), False)
+        (book for book in booksList if book["title"] == title), False)
     if searchedBook:
         return jsonify(searchedBook)
     else:
