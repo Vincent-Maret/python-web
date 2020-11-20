@@ -111,7 +111,7 @@ On peut lister les images disponibles sur l'host avec ```docker images```.
 
 ## Dockerfile
 
-Fichier qui va décrire la construction d'une image docker. Pardéfaut il doit se trouver à la racine du projet.
+Fichier qui va décrire la construction d'une image docker. Par défaut il doit se trouver à la racine du projet.
 
 
 ## Persistent storage ou volume
